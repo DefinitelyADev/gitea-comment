@@ -14,17 +14,20 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: '3.1.x'
+    - name: Publish
+      run: |
+        dotnet publish -c Release -o artifacts
+        rm artifacts/*.pdb
     - name: Login to docker
       run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
     - name: Determine version
       run: echo "VERSION=$(git describe --tags --dirty)" >> $GITHUB_ENV
     - name: Build the Docker image
       run: |
-        wget https://dotnet.microsoft.com/download/dotnet/scripts/v1/dotnet-install.sh
-        ./dotnet-install.sh --channel 3.1
-    - name: Build the Docker image
-      run: |
         docker build . --file Dockerfile --tag tsakidev/giteacomment:${VERSION}
         docker build . --file Dockerfile --tag tsakidev/giteacomment:latest
     - name: Docker push
-      run: docker push tsakidev/giteacomment
+      run: docker push -a tsakidev/giteacomment

@@ -20,6 +20,10 @@ jobs:
       run: echo "VERSION=$(git describe --tags --dirty)" >> $GITHUB_ENV
     - name: Build the Docker image
       run: |
+        wget https://dotnet.microsoft.com/download/dotnet/scripts/v1/dotnet-install.sh
+        ./dotnet-install.sh --channel 3.1
+    - name: Build the Docker image
+      run: |
         docker build . --file Dockerfile --tag tsakidev/giteacomment:${VERSION}
         docker build . --file Dockerfile --tag tsakidev/giteacomment:latest
     - name: Docker push

@@ -43,12 +43,20 @@ namespace IT.GiteaComment
             }
 
             string comment = string.Empty;
-            if (!string.IsNullOrEmpty(COMMENT_FROM_FILE) && !string.IsNullOrWhiteSpace(COMMENT_FROM_FILE))
+            if (!string.IsNullOrEmpty(COMMENT_FROM_FILE) && !string.IsNullOrWhiteSpace(COMMENT_FROM_FILE) && !string.IsNullOrWhiteSpace(COMMENT_TITLE))
             {
                 string title = COMMENT_TITLE.ToString().Trim();
                 title = !string.IsNullOrEmpty(title) ? title : "Gitea Comment";
                 Console.WriteLine("Reading from file");
                 comment = $"## {title}\\n```text\\n"+System.IO.File.ReadAllText(COMMENT_FROM_FILE.ToString()).Trim().Replace(Environment.NewLine, "\\n")+"\\n```";
+            }
+            else if (!string.IsNullOrEmpty(COMMENT_FROM_FILE) 
+                     && !string.IsNullOrWhiteSpace(COMMENT_FROM_FILE) 
+                     && string.IsNullOrWhiteSpace(COMMENT_TITLE))
+            {
+                Console.WriteLine("Reading from file");
+                var file = await System.IO.File.ReadAllTextAsync(COMMENT_FROM_FILE);
+                comment = file.Trim().Replace(Environment.NewLine, @"\n");
             }
             else
             {

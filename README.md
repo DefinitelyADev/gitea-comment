@@ -36,3 +36,22 @@ steps:
     status: [ failure ]
     event: pull_request
 ```
+
+Example reference providing Markdown comments from Marktdown files:
+
+Do not specify the title so that the contents of the file are not 
+encapsulated within a code block.
+
+```yml
+steps:
+- name: post-to-gitea-pr
+  image: tsakidev/giteacomment:latest
+  settings:
+    gitea_token:
+      from_secret: gitea_token
+    gitea_base_url: http://gitea.example.com
+    comment_from_file: "/path/to/file.md"
+  when:
+    status: [ failure ]
+    event: pull_request
+```
